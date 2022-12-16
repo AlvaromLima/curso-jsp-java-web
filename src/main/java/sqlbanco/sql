@@ -1,0 +1,127 @@
+
+CREATE DATABASE "curso-jsp"
+  WITH OWNER = postgres
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'Portuguese_Brazil.1252'
+       LC_CTYPE = 'Portuguese_Brazil.1252'
+       CONNECTION LIMIT = -1;
+
+-- Sequence: public.model_login_id_seq
+
+-- DROP SEQUENCE public.model_login_id_seq;
+
+CREATE SEQUENCE public.model_login_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 54
+  CACHE 1;
+ALTER TABLE public.model_login_id_seq
+  OWNER TO postgres;
+
+-- Table: public.model_login
+
+-- DROP TABLE public.model_login;
+
+CREATE TABLE public.model_login
+(
+  login character varying(200) NOT NULL,
+  senha character varying(200) NOT NULL,
+  id integer NOT NULL DEFAULT nextval('model_login_id_seq'::regclass),
+  nome character(300) NOT NULL,
+  email character(300) NOT NULL,
+  useradmin boolean NOT NULL DEFAULT false,
+  usuario_id bigint NOT NULL DEFAULT 1,
+  perfil character varying(200),
+  sexo character varying(200),
+  fotouser text,
+  extensaofotouser character varying(10),
+  cep character varying(10),
+  logradouro character varying(250),
+  bairro character varying(200),
+  localidade character varying(200),
+  uf character varying(200),
+  numero character varying(10),
+  complemento character varying(200),
+  datanascimento date,
+  rendamensal double precision,
+  cpf character varying(200),
+  CONSTRAINT model_login_pkey PRIMARY KEY (id),
+  CONSTRAINT usuario_fk FOREIGN KEY (usuario_id)
+      REFERENCES public.model_login (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT login_unique UNIQUE (login)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.model_login
+  OWNER TO postgres;
+
+-- Sequence: public.telefone_seq
+
+-- DROP SEQUENCE public.telefone_seq;
+
+CREATE SEQUENCE public.telefone_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.telefone_seq
+  OWNER TO postgres;
+ 
+-- Table: public.telefone
+
+-- DROP TABLE public.telefone;
+
+CREATE TABLE public.telefone
+(
+  id integer NOT NULL DEFAULT nextval('telefone_seq'::regclass),
+  numero character varying(50) NOT NULL,
+  usuario_pai_id bigint NOT NULL,
+  usuario_cad_id bigint NOT NULL,
+  CONSTRAINT telefone_pkey PRIMARY KEY (id),
+  CONSTRAINT usuario_cad_fk FOREIGN KEY (usuario_cad_id)
+      REFERENCES public.model_login (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT usuario_pai_fk FOREIGN KEY (usuario_pai_id)
+      REFERENCES public.model_login (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.telefone
+  OWNER TO postgres;
+
+-- Sequence: public.versionadorbanco_seq
+
+-- DROP SEQUENCE public.versionadorbanco_seq;
+
+CREATE SEQUENCE public.versionadorbanco_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.versionadorbanco_seq
+  OWNER TO postgres;
+
+-- Table: public.versionadorbanco
+
+-- DROP TABLE public.versionadorbanco;
+
+CREATE TABLE public.versionadorbanco
+(
+  id integer NOT NULL DEFAULT nextval('versionadorbanco_seq'::regclass),
+  arquivo_sql character varying(50) NOT NULL,
+  CONSTRAINT id_pk PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.versionadorbanco
+  OWNER TO postgres;
+  
